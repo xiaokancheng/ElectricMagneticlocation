@@ -25,17 +25,19 @@ void sin(void);
 int main(void)
 {
 //    int32_t iTemp;
-//	uint8_t i;
+//    uint8_t i;
 //    int32_t adc[8];
-//	int32_t volt[8];
+//    int32_t volt[8];
     
     
     Modular_Init();                 //模块初始化
-//    Screen_Init();
+//    TIM3_Init(50-1,900-1);       //定时器3初始化，定时器时钟为90M，分频系数为9000-1，
+                                    //所以定时器3的频率为90M/9000=10K，自动重装载为5000-1，那么定时器周期就是500ms
+    Screen_Init();
     
     delay_ms(100);
     
-    Ad9850_Init(serial, 1);    //AD9850初始化，串并行,频率
+    Ad9850_Init(serial, 10000);    //AD9850初始化，串并行,频率
     bsp_InitADS1256();	    /* 初始化配置ADS1256.  PGA=1, DRATE=30KSPS, BUFEN=1, 输入正负5V */
     /*AD1256初始化，1为差分，0为单端,后面为PGA增益及数据输出速率*/
     bsp_Cfg_ADS1256(0, ADS1256_GAIN_1, ADS1256_30000SPS);
@@ -57,7 +59,7 @@ int main(void)
 ////        }
 
 
-////		LED_Test();		/* 空闲时执行的函数 */
+        LED_Test();		/* 空闲时执行的函数 */
 
 //    for (i = 0; i < ch_num; i++)
 //    {
@@ -109,25 +111,6 @@ int main(void)
 //以下是模块函数
 
 
-
-void sin(void)
-{
-    int i;
-    double x,xx,x0,x1,x2,x3;
-    for(i=0;i<=100;i++)
-    {
-        x = i*(2*3.14/100)-3.14;
-        xx = x*x;
-        x0 = 1-xx/(8*9);
-        x1 = 1-x0*xx/(6*7);
-        x2 = 1-x1*xx/(4*5);
-        x3 = 1-x2*xx/(2*3);
-        
-        Virtual_Osc(4,(int16_t) (x*x3*1000), 0, 0, 0, 0, 0, 0, 0);
-        delay_ms(1);
-    }
-}
-
 void Modular_Init(void)
 {
     HAL_Init();                     //初始化HAL库   
@@ -136,10 +119,8 @@ void Modular_Init(void)
     uart_init(115200);              //初始化USART
     LED_Init();                     //初始化LED 
     KEY_Init();                     //初始化按键
-//    SDRAM_Init();                   //初始化SDRAM
-//    LCD_Init();                     //初始化LCD
-//    TIM3_Init(50-1,900-1);       //定时器3初始化，定时器时钟为90M，分频系数为9000-1，
-                                    //所以定时器3的频率为90M/9000=10K，自动重装载为5000-1，那么定时器周期就是500ms
+    SDRAM_Init();                   //初始化SDRAM
+    LCD_Init();                     //初始化LCD
 }
 void Screen_Init(void)
 {

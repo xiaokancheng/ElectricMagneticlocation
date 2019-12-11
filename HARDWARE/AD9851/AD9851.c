@@ -8,7 +8,7 @@
 
 void Ad9850_Init(u8 mode, u16 frequency)
 {
-    ad9851_Init();                  //初始化AD9851模块，0x00代表前8位，输出频率10k
+    ad9851_Init();                  //初始化AD9851模块，0x00代表前8位，输出频率为后32位
     if(mode == parrel)
     {
     	ad9851_reset_parrel();
